@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Fornecedores</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="popUp.css">
+</head>
+<body>
+    <nav>
+        <p class="nav">Forn-X</p>
+        <button class="nav" onclick="window.location.href = 'todos.html'">Informações Completas</button>  <p class="decoracao">|</p> <button class="nav" onclick="window.location.href = 'pessoasFisicas.html'">Pessoas Físicas</button> <p class="decoracao">|</p> <button class="nav" onclick="window.location.href = 'pessoasJuridicas.html'">Pessoas Jurídicas</button>
+    </nav>
+    <h1>Cadastro dos Fornecedores</h1>
+
+    <!--Lista de cadastro de fornecedores-->
+    <form id="fornecedor-form">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" required />
+        
+        <label for="cnpj">CNPJ:</label>
+        <input type="text" id="cnpj" required />
+
+        <label for="tipo">Tipo:</label>
+        <select id="tipo">
+            <option value="Físico">Físico</option>
+            <option value="Jurídico">Jurídico</option>
+        </select><br><br>
+
+        <label for="cidade">Cidade</label>
+        <input type="text" id="cidade" required>
+
+        <label for="bairro">Bairro</label>
+        <input type="text" id="bairro" required>
+
+        <label for="telefone">Tel</label>
+        <input type="text" id="telefone" required><br><br>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" required>
+
+        <label for="produto">Produto</label>
+        <input type="text" id="produto" required>
+
+        <label for="valor">Valor</label>
+        <input type="number" step="0.01" id="valor" required><br><br>
+        
+        <button class="list" type="submit">Criar Fornecedor</button>
+    </form>
+
+    <div id="container-fornecedor">
+        <!--FORNECEDORES SERÃO EXIBIDOS AQUI-->
+    </div>
+
+    <script>
+        let fornecedores = [];  // Armazenar fornecedores
+
+        // Função para carregar fornecedores
+        async function carregaFornecedor() {
+            try {
+                const resposta = await fetch('http://localhost:3031/mostrar'); // URL da API
+                if (!resposta.ok) {
+                    throw new Error('Erro na rede: ' + resposta.status);
+                }
+                fornecedores = await resposta.json(); // Atualiza o array de fornecedores
+
+                const container = document.getElementById("container-fornecedor");
+                container.innerHTML = ""; // Limpa o container
+
+                // Verifica se a lista de fornecedores está vazia
+                if (fornecedores.length === 0) {
+                    container.innerHTML = "<p>Nenhum fornecedor encontrado.</p>";
+                    return;
+                }
+
+                fornecedores.forEach((fornecedor) => {
+                    const preco = fornecedor.valor ? Number(fornecedor.valor).toFixed(2) : "Indisponível";
+
+                    const fornecedorDiv = document.createElement("div");
+                    fornecedorDiv.innerHTML = `<p>Nome: ${fornecedor.nome} - Tipo: ${fornecedor.tipo} - Produto: ${fornecedor.produto} - Valor: R$ ${preco}</p>
+                        <button onclick="deletarFornecedor(${fornecedor.id})">Deletar</button> <button onclick="editarFornecedor(${fornecedor.id})">Editar</button>`;
+                    container.appendChild(fornecedorDiv);
+                });
+            } catch (error) {
+                console.error('Erro ao carregar fornecedores:', error);
+                const container = document.getElementById("container-fornecedor");
+                container.innerHTML = "<p>Erro ao carregar fornecedores.</p>";
+            }
+        }
+
+        // Função para adicionar fornecedor
+        async function adicionarFornecedor(event) {
+            event.preventDefault();
+
+            const nome = document.getElementById("nome").value;
+            const cnpj = document.getElementById("cnpj").value;
+            const tipo = document.getElementById("tipo").value;
+            alert(tipo);
+            const cidade = document.getElementById("cidade").value;
+            const bairro = document.getElementById("bairro").value;
+            const telefone = document.getElementById("telefone").value;
+            const email = document.getElementById("email").value;
+            const produto = document.getElementById("produto").value;
+            const valor = document.getElementById("valor").value;
+
+            const novoFornecedor = {
+                nome,
+                cnpj,
+                tipo,
+                cidade,
+                bairro,
+                telefone,
+                email,
+                produto,
+                valor: parseFloat(valor),
+            };
+
+            try {
+                const resposta = await fetch(`http://localhost:3031/salvar/${nome}/${cnpj}/${tipo}/${cidade}/${bairro}/${telefone}/${email}/${produto}/${valor}`);
+                if (resposta.ok) {
+                    carregaFornecedor(); // Atualiza a lista de fornecedores após adicionar
+                    document.getElementById("fornecedor-form").reset(); // Limpa o formulário
+                } else {
+                    alert("Erro ao criar fornecedor.");
+                }
+            } catch (error) {
+                console.error("Erro ao adicionar fornecedor:", error);
+                alert("Erro de rede ao tentar criar fornecedor.");
+            }
+        }
+
+        // Função para deletar fornecedor
+        async function deletarFornecedor(id) {
+            const resposta = await fetch(`http://localhost:3031/deletar/${id}`);
+            carregaFornecedor(); // Atualiza a lista após deletar
+        }
+
+        // Função para editar fornecedor
+        async function editarFornecedor(id) {
+            window.location.href = `update.html?id=${id}`;
+        }
+
+        // Adiciona o evento de submit no formulário de criação
+        document.getElementById("fornecedor-form").addEventListener("submit", adicionarFornecedor);
+
+        // Carrega os fornecedores ao iniciar a página
+        window.onload = carregaFornecedor;
+    </script>
+</body>
+</html>
