@@ -31,7 +31,7 @@ CREATE TABLE `fornecedors` (
   `id` int(11) NOT NULL,
   `nome` varchar(255) NOT NULL,
   `cnpj` varchar(255) NOT NULL,
-  `tipo` enum('Físico','Jurídica') NOT NULL,
+  `tipo` enum('Físico','Jurídico') NOT NULL,
   `cidade` varchar(255) NOT NULL,
   `bairro` varchar(255) NOT NULL,
   `telefone` varchar(255) NOT NULL,

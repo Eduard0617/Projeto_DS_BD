@@ -5,6 +5,7 @@ const cors = require("cors");
 
 //### Configuração do CORS ###
 rotas.use(cors()); // Permitir todas as origens
+rotas.use(express.json()); // Middleware para interpretar o corpo das requisições como JSON
 
 //### Banco de dados ###
 const conexaoBanco = new Sequelize("fornecedores", "root", "", {
@@ -117,8 +118,9 @@ rotas.get("/deletar/:id", async (req, res) => {
 });
 
 // Atualizar um fornecedor
-rotas.get("/atualizar/:id/:nome/:cnpj/:tipo/:cidade/:bairro/:telefone/:email/:produto/:valor", async (req, res) => {
-  const { id, nome, cnpj, tipo, cidade, bairro, telefone, email, produto, valor } = req.params;
+rotas.put("/atualizar/:id", async (req, res) => {
+  const { id } = req.params;
+  const { nome, cnpj, tipo, cidade, bairro, telefone, email, produto, valor } = req.body;
 
   try {
     const [updated] = await Fornecedor.update(
