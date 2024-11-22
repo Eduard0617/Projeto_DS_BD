@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editar Fornecedor</title>
+  <link rel="stylesheet" href="styles.css"> <!-- Adiciona o mesmo arquivo de estilo -->
+  <link rel="stylesheet" href="popUp.css"> <!-- Se tiver um estilo para pop-ups -->
+</head>
+<body>
+  <nav>
+    <p class="nav">Forn-X</p>
+    <button class="nav" onclick="window.location.href = 'index.html'">Página principal</button>  
+  </nav>
+
+  <h1>Editar Fornecedor</h1>
+  
+  <!-- Formulário para editar o fornecedor -->
+  <form id="fornecedor-form">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" required />
+    
+    <label for="cnpj">CNPJ:</label>
+    <input type="text" id="cnpj" required />
+
+    <label for="tipo">Tipo:</label>
+    <select id="tipo" required>
+        <option value="Físico">Físico</option>
+        <option value="Jurídico">Jurídico</option>
+    </select><br><br>
+
+    <label for="cidade">Cidade</label>
+    <input type="text" id="cidade" required>
+
+    <label for="bairro">Bairro</label>
+    <input type="text" id="bairro" required>
+
+    <label for="telefone">Telefone</label>
+    <input type="text" id="telefone" required><br><br>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" required>
+
+    <label for="produto">Produto</label>
+    <input type="text" id="produto" required>
+
+    <label for="valor">Valor</label>
+    <input type="number" step="0.01" id="valor" required><br><br>
+    
+    <button class="list" type="submit">Atualizar dados</button>
+  </form>
+
+  <script>
+    async function carregarFornecedor() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get("id");
+
+      try {
+        const resposta = await fetch(`http://localhost:3031/mostrar`);
+        const fornecedores = await resposta.json();
+        const fornecedor = fornecedores.find((item) => item.id == id);
+
+        if (fornecedor) {
+          document.getElementById("nome").value = fornecedor.nome;
+          document.getElementById("cnpj").value = fornecedor.cnpj;
+          document.getElementById("tipo").value = fornecedor.tipo;
+          document.getElementById("cidade").value = fornecedor.cidade;
+          document.getElementById("bairro").value = fornecedor.bairro;
+          document.getElementById("telefone").value = fornecedor.telefone;
+          document.getElementById("email").value = fornecedor.email;
+          document.getElementById("produto").value = fornecedor.produto;
+          document.getElementById("valor").value = fornecedor.valor;
+        } else {
+          alert("Fornecedor não encontrado.");
+          window.location.href = "index.html";
+        }
+      } catch (error) {
+        console.error('Erro ao carregar fornecedor:', error);
+        alert("Erro ao carregar fornecedor.");
+        window.location.href = "index.html";
+      }
+    }
+
+    async function salvarAlteracoes(event) {
+      event.preventDefault();
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get("id");
+
+      const nome = document.getElementById("nome").value;
+      const cnpj = document.getElementById("cnpj").value;
+      const tipo = document.getElementById("tipo").value;
+      const cidade = document.getElementById("cidade").value;
+      const bairro = document.getElementById("bairro").value;
+      const telefone = document.getElementById("telefone").value;
+      const email = document.getElementById("email").value;
+      const produto = document.getElementById("produto").value;
+      const valor = document.getElementById("valor").value;
+
+      // Validação simples
+      if (!nome || !cnpj || !email) {
+        alert("Por favor, preencha todos os campos obrigatórios.");
+        return;
+      }
+
+      try {
+        const resposta = await fetch(`http://localhost:3031/atualizar/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            nome,
+            cnpj,
+            tipo,
+            cidade,
+            bairro,
+            telefone,
+            email,
+            produto,
+            valor
+          }),
+        });
+
+        if (resposta.ok) {
+          alert("Fornecedor atualizado com sucesso!");
+          window.location.href = "index.html";
+        } else {
+          const error = await resposta.text();
+          console.error("Erro ao atualizar fornecedor:", error);
+          alert("Erro ao atualizar fornecedor.");
+        }
+      } catch (error) {
+        console.error("Erro de rede ao tentar atualizar fornecedor:", error);
+        alert("Erro de rede ao tentar atualizar fornecedor.");
+      }
+    }
+
+    // Carrega os dados do fornecedor ao abrir a página
+    window.onload = carregarFornecedor;
+
+    // Adiciona evento para salvar as alterações
+    document.getElementById("fornecedor-form").addEventListener("submit", salvarAlteracoes);
+  </script>
+</body>
+</html>

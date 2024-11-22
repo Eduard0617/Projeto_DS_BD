@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pessoas Jurídicas</title>
+    <link rel="stylesheet" href="informacao.css">
+</head>
+<body>
+    <nav>
+        <p class="nav">Forn-X</p>
+        <button class="nav" onclick="window.location.href = 'index.html'">Página Inicial</button>  
+        <p class="decoracao">|</p> 
+        <button class="nav" onclick="window.location.href = 'todos.html'">Todos os Fornecedores</button>
+        <p class="decoracao">|</p>
+        <button class="nav" onclick="window.location.href = 'pessoasFisicas.html'">Pessoas Físicas</button>
+    </nav>
+    <h1>Fornecedores - Pessoas Jurídicas</h1>
+
+    <div id="container-fornecedor">
+        <!-- Fornecedores serão exibidos aqui -->
+    </div>
+
+    <script>
+        let fornecedores = [];
+
+        // Função para carregar fornecedores do tipo Jurídico
+        async function carregaFornecedor() {
+            try {
+                const resposta = await fetch('http://localhost:3031/mostrar'); // URL da API
+                if (!resposta.ok) {
+                    throw new Error('Erro na rede: ' + resposta.status);
+                }
+                fornecedores = await resposta.json(); // Atualiza a lista de fornecedores
+                exibeFornecedores();
+            } catch (error) {
+                console.error('Erro ao carregar fornecedores:', error);
+                const container = document.getElementById("container-fornecedor");
+                container.innerHTML = "<p>Erro ao carregar fornecedores.</p>";
+            }
+        }
+
+        // Exibe apenas fornecedores do tipo "Jurídico"
+        function exibeFornecedores() {
+            const container = document.getElementById("container-fornecedor");
+            container.innerHTML = ""; // Limpa o conteúdo
+
+            const fornecedoresJuridicos = fornecedores.filter(f => f.tipo === "Jurídico");
+
+            if (fornecedoresJuridicos.length === 0) {
+                container.innerHTML = "<p>Nenhum fornecedor encontrado.</p>";
+                return;
+            }
+
+            fornecedoresJuridicos.forEach(fornecedor => {
+                const preco = fornecedor.valor ? Number(fornecedor.valor).toFixed(2) : "Indisponível";
+                const fornecedorDiv = document.createElement("div");
+                fornecedorDiv.innerHTML = `
+                    <p>Nome: ${fornecedor.nome} <p> Telefone: ${fornecedor.telefone} <p> CNPJ: ${fornecedor.cnpj} <p> Tipo: ${fornecedor.tipo} <p> Cidade: ${fornecedor.cidade} <p> Bairro: ${fornecedor.bairro} <p> Email: ${fornecedor.email} <p> Produto: ${fornecedor.produto} <p> Valor: R$ ${preco}</p>`;
+                container.appendChild(fornecedorDiv);
+            });
+        }
+
+        // Carrega os fornecedores ao carregar a página
+        window.onload = carregaFornecedor;
+    </script>
+</body>
+</html>
