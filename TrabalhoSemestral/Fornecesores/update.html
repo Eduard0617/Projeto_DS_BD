@@ -17,38 +17,29 @@
   
   <!-- Formulário para editar o fornecedor -->
   <form id="fornecedor-form">
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" required />
+    <input type="text" id="nome" placeholder="Nome" required/>
     
-    <label for="cnpj">CNPJ:</label>
-    <input type="text" id="cnpj" required />
+    <input type="text" id="cnpj" placeholder="CNPJ" required />
 
-    <label for="tipo">Tipo:</label>
-    <select id="tipo" required>
+    <select id="tipo">
         <option value="Físico">Físico</option>
         <option value="Jurídico">Jurídico</option>
     </select><br><br>
 
-    <label for="cidade">Cidade</label>
-    <input type="text" id="cidade" required>
+    <input type="text" id="cidade" placeholder="Cidade" required>
 
-    <label for="bairro">Bairro</label>
-    <input type="text" id="bairro" required>
+    <input type="text" id="bairro" placeholder="Estado" required>
 
-    <label for="telefone">Telefone</label>
-    <input type="text" id="telefone" required><br><br>
+    <input type="text" id="telefone" placeholder="telefone" required><br><br>
 
-    <label for="email">Email</label>
-    <input type="email" id="email" required>
+    <input type="email" id="email" placeholder="Email" required>
 
-    <label for="produto">Produto</label>
-    <input type="text" id="produto" required>
+    <input type="text" id="produto" placeholder="Produto" required>
 
-    <label for="valor">Valor</label>
-    <input type="number" step="0.01" id="valor" required><br><br>
+    <input type="number" step="0.01" id="valor" placeholder="Preço" required><br><br>
     
-    <button class="list" type="submit">Atualizar dados</button>
-  </form>
+    <button class="list" type="submit">Criar Fornecedor</button>
+</form>
 
   <script>
     async function carregarFornecedor() {

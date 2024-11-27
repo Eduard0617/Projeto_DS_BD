@@ -6,51 +6,48 @@
     <title>Lista de Fornecedores</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="popUp.css">
+    <!-- Adicionar o link do Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <nav>
         <p class="nav">Forn-X</p>
-        <button class="nav" onclick="window.location.href = 'todos.html'">Informações Completas</button>  <p class="decoracao">|</p> <button class="nav" onclick="window.location.href = 'pessoasFisicas.html'">Pessoas Físicas</button> <p class="decoracao">|</p> <button class="nav" onclick="window.location.href = 'pessoasJuridicas.html'">Pessoas Jurídicas</button>
+        <button class="nav" onclick="window.location.href = 'todos.html'">Informações Completas</button>  
+        <p class="decoracao">|</p> 
+        <button class="nav" onclick="window.location.href = 'pessoasFisicas.html'">Pessoas Físicas</button>
+        <p class="decoracao">|</p> 
+        <button class="nav" onclick="window.location.href = 'pessoasJuridicas.html'">Pessoas Jurídicas</button>
     </nav>
     <h1>Cadastro dos Fornecedores</h1>
 
-    <!--Lista de cadastro de fornecedores-->
+    <!-- Lista de cadastro de fornecedores -->
     <form id="fornecedor-form">
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" required />
+        <input type="text" id="nome" placeholder="Nome" required/>
         
-        <label for="cnpj">CNPJ:</label>
-        <input type="text" id="cnpj" required />
+        <input type="text" id="cnpj" placeholder="CNPJ" required />
 
-        <label for="tipo">Tipo:</label>
         <select id="tipo">
             <option value="Físico">Físico</option>
             <option value="Jurídico">Jurídico</option>
         </select><br><br>
 
-        <label for="cidade">Cidade</label>
-        <input type="text" id="cidade" required>
+        <input type="text" id="cidade" placeholder="Cidade" required>
 
-        <label for="bairro">Bairro</label>
-        <input type="text" id="bairro" required>
+        <input type="text" id="bairro" placeholder="Estado" required>
 
-        <label for="telefone">Tel</label>
-        <input type="text" id="telefone" required><br><br>
+        <input type="text" id="telefone" placeholder="telefone" required><br><br>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" required>
+        <input type="email" id="email" placeholder="Email" required>
 
-        <label for="produto">Produto</label>
-        <input type="text" id="produto" required>
+        <input type="text" id="produto" placeholder="Produto" required>
 
-        <label for="valor">Valor</label>
-        <input type="number" step="0.01" id="valor" required><br><br>
+        <input type="number" step="0.01" id="valor" placeholder="Preço" required><br><br>
         
         <button class="list" type="submit">Criar Fornecedor</button>
     </form>
 
     <div id="container-fornecedor">
-        <!--FORNECEDORES SERÃO EXIBIDOS AQUI-->
+        <!-- FORNECEDORES SERÃO EXIBIDOS AQUI -->
     </div>
 
     <script>
@@ -79,7 +76,8 @@
 
                     const fornecedorDiv = document.createElement("div");
                     fornecedorDiv.innerHTML = `<p>Nome: ${fornecedor.nome} - Tipo: ${fornecedor.tipo} - Produto: ${fornecedor.produto} - Valor: R$ ${preco}</p>
-                        <button onclick="deletarFornecedor(${fornecedor.id})">Deletar</button> <button onclick="editarFornecedor(${fornecedor.id})">Editar</button>`;
+                        <button class="btn btn-danger btn-sm" onclick="deletarFornecedor(${fornecedor.id})">Deletar</button> 
+                        <button class="btn btn-warning btn-sm" onclick="editarFornecedor(${fornecedor.id})">Editar</button>`;
                     container.appendChild(fornecedorDiv);
                 });
             } catch (error) {
@@ -146,5 +144,8 @@
         // Carrega os fornecedores ao iniciar a página
         window.onload = carregaFornecedor;
     </script>
+
+    <!-- Adicionar script do Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
